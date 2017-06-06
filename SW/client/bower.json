@@ -20,6 +20,7 @@
     "tests"
   ],
   "dependencies": {
-    "three.js": "threejs#*"
+    "three.js": "threejs#*",
+    "fullik": "https://github.com/lo-th/fullik.git#be7c92f8b16133e60e8c800d5c23279e54bd4bc8"
   }
 }
