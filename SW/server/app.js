@@ -1,16 +1,7 @@
-var SerialPort = require('serialport');
-var port = new SerialPort('tty.usbmodem1411');
+console.log("READY");
 
-port.on('open', function() {
-  port.write('main screen turn on', function(err) {
-    if (err) {
-      return console.log('Error on write: ', err.message);
-    }
-    console.log('message written');
-  });
+var connect = require('connect');
+var serveStatic = require('serve-static');
+connect().use(serveStatic("./client")).listen(8080, function(){
+    console.log('Server running on 8080...');
 });
-
-// open errors will be emitted as an error event
-port.on('error', function(err) {
-  console.log('Error: ', err.message);
-})

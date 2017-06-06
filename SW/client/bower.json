@@ -1,0 +1,22 @@
+{
+  "name": "Tellart_Arm",
+  "homepage": "https://github.com/fdiazsmith/Tellart_Arm",
+  "authors": [
+    "Fernando Diaz Smith <fdiazsmith@gmail.com>"
+  ],
+  "description": "A re-make of the tellart sketchbot arm",
+  "main": "index.html",
+  "keywords": [
+    "robot",
+    "arm"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
