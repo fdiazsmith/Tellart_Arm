@@ -2,7 +2,7 @@
   "name": "tellart_arm",
   "version": "1.0.0",
   "description": "A remade of the Tellart Sketch Arm",
-  "main": "app.js",
+  "main": "app/app.js",
   "scripts": {
     "test": "echo 'test'"
   },
