@@ -1,6 +1,14 @@
 # Tellart_Arm
 A rebuild of the Tellart Sketchbot
 
+###Allias
+
+sketchBot = ```cd Users/wall-e/Documents/ChromeWebLab-master/Sketchbots/```
+
+robotcontrol = ```cd Users/wall-e/Documents/ChromeWebLab-master/Sketchbots/sw/robotcontrol/```
+
+tellartArm = ```cd /Users/wall-e/Documents/Tellart_Arm```
+
 ### Arduino Setup
 
 1. Download and install the latest version of the [Arduino IDE](http://arduino.cc/en/main/software).

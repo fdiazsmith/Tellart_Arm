@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/fdiazsmith/Tellart_Arm/issues"
   },
-  "homepage": "https://github.com/fdiazsmith/Tellart_Arm#readme"
+  "homepage": "https://github.com/fdiazsmith/Tellart_Arm#readme",
+  "dependencies": {
+    "kinematics": "^1.0.2"
+  }
 }

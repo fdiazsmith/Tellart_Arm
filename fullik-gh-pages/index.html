@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>FulliK</title>
+        <link rel="shortcut icon" href="favicon.ico">
+		<style>
+			body {
+				margin:0;
+				font-family:"Lucida Console", Monaco, monospace;
+				font-size: 11px;
+                color:#fff;
+				overflow: hidden;
+				background: #333333;
+			}
+
+			canvas { width: 100%; height: 100% }
+            #debug { position:absolute; top:10px; left:10px; width:200px; text-align:left; pointer-events:none;}
+
+		</style>
+	</head>
+	<body>
+
+	<script src="js/three.min.js"></script>
+	<script src="js/OrbitControls.js"></script>
+    <script src="js/TransformControls.js"></script>
+    <script src='js/uil.min.js'></script>
+
+	<script src="src/Fullik.js"></script>
+	<script src="src/Geom.js"></script>
+	<script src="src/Joint.js"></script>
+	<script src="src/Bone.js"></script>
+	<script src="src/Chain.js"></script>
+	<script src="src/Structure.js"></script>
+
+    <div id="debug"></div>
+
+	<script>
+
+		var gui, scene, camera, renderer, orbit, ambientLight, lights, mesh, bones, skeletonHelper, control ;
+
+		var target, effector;
+
+		var boxTarget , boxEffector;
+
+		var box = [];
+
+        var targets = [];
+
+        var setting = {fixed:true}
+
+		var solver;
+
+		var X_AXIS, Y_AXIS, Z_AXIS;
+		var defaultBoneDirection, defaultBoneLength;
+
+		var state = {
+
+			animateBones : false
+
+		};
+
+
+		function initScene () {
+
+			scene = new THREE.Scene();
+			camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 0.1, 2000 );
+			camera.position.z = 70;
+			//camera.position.y = 30;
+
+			renderer = new THREE.WebGLRenderer( { antialias: true } );
+			renderer.setPixelRatio( window.devicePixelRatio );
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+            renderer.setClearColor( 0x333333, 1 );
+
+			orbit = new THREE.OrbitControls( camera, renderer.domElement );
+			orbit.enableZoom = false;
+
+
+			ambientLight = new THREE.AmbientLight( 0x000000 );
+			scene.add( ambientLight );
+
+			lights = [];
+			lights[ 0 ] = new THREE.PointLight( 0xffffff, 1, 0 );
+			lights[ 1 ] = new THREE.PointLight( 0xffffff, 1, 0 );
+			lights[ 2 ] = new THREE.PointLight( 0xffffff, 1, 0 );
+
+			lights[ 0 ].position.set( 0, 200, 0 );
+			lights[ 1 ].position.set( 100, 200, 100 );
+			lights[ 2 ].position.set( - 100, - 200, - 100 );
+
+			scene.add( lights[ 0 ] );
+			scene.add( lights[ 1 ] );
+			scene.add( lights[ 2 ] );
+
+			window.addEventListener( 'resize', function () {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}, false );
+
+
+
+
+            X_AXIS = new Fullik.V3( 1, 0, 0 );
+            Y_AXIS = new Fullik.V3( 0, 1, 0 );
+            Z_AXIS = new Fullik.V3( 0, 0, 1 );
+
+            defaultBoneDirection = Z_AXIS.negated();
+            defaultBoneLength = 10;
+
+            solver = new Fullik.Structure( scene );
+
+            demo();
+		}
+
+        function addTarget( position ){
+
+            var n = {
+                mesh : new THREE.Mesh( new THREE.SphereBufferGeometry( 0.75 ),  new THREE.MeshStandardMaterial({color:0xFFFFFF, wireframe:true }) ),
+                control : new THREE.TransformControls( camera, renderer.domElement ),
+            }
+
+            scene.add( n.mesh );
+            n.mesh.position.copy(position);
+            n.control.addEventListener( 'change', updateSolver );
+            n.control.attach( n.mesh );
+            n.control.setSize(0.75);
+            scene.add( n.control );
+
+            n.position = n.mesh.position;
+
+            targets.push(n);
+        };
+
+        function demo(){
+
+            // add basic target
+            addTarget( new THREE.Vector3(2, 5, 0) );
+            target = targets[0].position;
+
+                var startLoc = new Fullik.V3();
+
+                var chain, basebone;
+
+                // 0 spine
+
+                chain = new Fullik.Chain( 0xFFFF00 );
+                basebone = new Fullik.Bone( startLoc, new Fullik.V3( 0, 10, 0 ) );
+                chain.addBone( basebone );
+                chain.addConsecutiveRotorConstrainedBone( X_AXIS, 10, 130 );
+
+                solver.add( chain, targets[0].position, true );
+
+            solver.update();
+        }
+
+        function updateSolver () {
+            solver.update();
+        }
+
+		function render () {
+
+			requestAnimationFrame( render );
+			renderer.render( scene, camera );
+
+		};
+
+
+		initScene();
+		render();
+
+	</script>
+	</body>
+</html>
