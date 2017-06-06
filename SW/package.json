@@ -4,7 +4,8 @@
   "description": "A remade of the Tellart Sketch Arm",
   "main": "app/app.js",
   "scripts": {
-    "test": "echo 'test'"
+    "test": "echo 'test'",
+    "start": "node server/app.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
   },
   "homepage": "https://github.com/fdiazsmith/Tellart_Arm#readme",
   "dependencies": {
-    "kinematics": "^1.0.2"
+    "kinematics": "^1.0.2",
+    "serialport": "^4.0.7"
   }
 }
