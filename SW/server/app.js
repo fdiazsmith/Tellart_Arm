@@ -20,15 +20,17 @@ const geometry = [
     ]
 
 const RobotKin = new Kinematics(geometry)
+console.log(RobotKin);
 
-let angles = [1.57, 1.2, 0, 0.3, 2.2, 1.1]
+let angles = [0, 0, 0, 0, 0, 1]
+console.log('angles from array\n',angles);
+const pose = RobotKin.forward(...angles)
 
-const pose = RobotKin.forward(...angles)[5]
+console.log('angles forward\n',pose);
 
-angles = RobotKin.inverse(...pose)
+var testA = [
+  5,5,0, 0, 0,0
+]
+angles = RobotKin.inverse( ...testA )
 
-console.log(angles);
-let angles1 = RobotKin.inverse(...pose)
-angles1[2] += angles1[1]
-console.log("compare ");
-console.log(angles1);
+console.log('angles inverse\n',angles);

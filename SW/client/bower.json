@@ -1,5 +1,5 @@
 {
-  "name": "Tellart_Arm",
+  "name": "tellart_arm",
   "homepage": "https://github.com/fdiazsmith/Tellart_Arm",
   "authors": [
     "Fernando Diaz Smith <fdiazsmith@gmail.com>"
@@ -21,6 +21,8 @@
   ],
   "dependencies": {
     "three.js": "threejs#*",
-    "fullik": "https://github.com/lo-th/fullik.git#be7c92f8b16133e60e8c800d5c23279e54bd4bc8"
+    "fullik": "https://github.com/lo-th/fullik.git#be7c92f8b16133e60e8c800d5c23279e54bd4bc8",
+    "dat.gui": "dat-gui#^0.6.5",
+    "kinematics": "https://github.com/glumb/kinematics.git#6748bc26699b35f5da40cea6cdc50d62365abcc4"
   }
 }

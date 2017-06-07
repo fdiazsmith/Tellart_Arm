@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Robo Controler – test</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #f0f0f0;
+				margin: 0px;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+
+		<div id="container"></div>
+		<script src="kin.js"></script>
+
+		<script src="bower_components/dat.gui/build/dat.gui.min.js"></script>
+		<script src="bower_components/three.js/build/three.js"></script>
+
+		<script src="bower_components/three.js/examples/js/controls/DragControls.js"></script>
+		<script src="bower_components/three.js/examples/js/controls/OrbitControls.js"></script>
+		<script src="bower_components/three.js/examples/js/controls/TransformControls.js"></script>
+
+		<script src="bower_components/three.js/examples/js/libs/stats.min.js"></script>
+		<script src="bower_components/three.js/examples/js/libs/dat.gui.min.js"></script>
+
+
+		<script>
+ 		
+			console.log("Initialize");
+			var measurements = {
+				end_x : 5.0,
+				end_z : 5.0
+			}
+			var gui = new dat.gui.GUI();
+			var f1 = gui.addFolder('Arm_End');
+			f1.add(measurements, 'end_x').min(-50).max(50).step(0.25);
+			f1.add(measurements, 'end_z').min(-50).max(50).step(0.25);
+			//
+			// var dx = mouse.x - segment1.x,
+			// 		dy = mouse.y - segment1.y,
+			// 		dist = Math.sqrt(dx * dx + dy * dy),
+			// 		a = 100,
+			// 		b = 100,
+			// 		c = Math.min(dist, a + b),
+			// 		B = Math.acos((b * b - a * a - c * c) / (-2 * a * c)),
+			// 		C = Math.acos((c * c - a * a - b * b) / (-2 * a * b)),
+			// 		D = Math.atan2(dy, dx),
+			// 		E = D + B + Math.PI + C;
+			//
+			//=====================================//
+			// Machine Settings: (cm)
+
+			var base_height 			= 			 5;
+			var base_radius 			= 			 5;
+			var base_offset 	  	= 		 2.5;
+
+			var lowerArm_height		= 	 13.75;
+			var lowerArm_radius		= 			 1.5;
+			var lowerArm_offset		=			 2.2;
+
+			var upperArm_height 	= 		14.9;
+			var upperArm_radius		=				 5;
+
+			//=====================================//
+
+			var params = {
+				uniform: true
+			};
+
+			init();
+			animate();
+
+			const geometry = [
+				// X   Y   Z
+				[1,  1,  0], // V0:
+				[0, 10,  0], // V1:
+				[5,  0,  0], // V2:
+				[3,  0,  0], // V3:
+				[0, -3,  0], // V4:
+			]
+
+			var kin = new Kinematics(geometry);
+
+			let angles = [0, 5, 0, 0, 0, 1]
+			var frw = kin.forward(...angles);
+			iK(angles);
+
+			function iK(a){
+				var frw = kin.inverse(...a);
+				console.log("print angles",frw);
+			}
+			var line2;
+			var testIK;
+			// var kin;
+			function init() {
+				container = document.getElementById( 'container' );
+				scene = new THREE.Scene();
+
+				// set ceamera
+				camera = new THREE.PerspectiveCamera( 3, window.innerWidth / window.innerHeight, 200, 10000 );
+				camera.position.set( -500, 400, 800 );
+				scene.add( camera );
+				scene.add( new THREE.AmbientLight( 0xf0f0f0 ) );
+
+				// draw grid
+				var grid = new THREE.GridHelper( 100, 100 );
+				grid.position.y = 0;
+				grid.material.opacity = 0.25;
+				grid.material.transparent = true;
+				scene.add(grid);
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setClearColor( 0xf0f0f0 );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.shadowMap.enabled = true;
+				container.appendChild( renderer.domElement );
+
+				// frames per second
+				stats = new Stats();
+				container.appendChild(stats.dom);
+
+				// Orbit controls
+				controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+				// make materal
+				var line = new THREE.LineBasicMaterial({color: 0x0000ff,linewidth: 1});
+				var material = new THREE.MeshNormalMaterial({shading: THREE.SmoothSHading});
+				var faces = 50;
+				var robotArm = new THREE.Mesh(base_Geometry, material);
+
+				//=========================//
+
+				//				 	LINE					 //
+
+				//=========================//
+				var lineMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff });
+				var geometry = new THREE.Geometry();
+				geometry.vertices.push(new THREE.Vector3(-10, 0, 0));
+				geometry.vertices.push(new THREE.Vector3(0, 10, 0));
+
+				var geometry2 = new THREE.Geometry();
+				geometry2.vertices.push(new THREE.Vector3(0, 10, 0));
+				geometry2.vertices.push(new THREE.Vector3(10, 0, 0));
+
+				var line = new THREE.Line(geometry, material);
+				line2 = new THREE.Line(geometry2, material);
+
+				robotArm.add(line);
+				robotArm.add(line2);
+
+
+
+
+				//=========================//
+				//				 	BASE					 //
+				//=========================//
+
+				var base_Geometry = new THREE.CylinderGeometry(base_radius,base_radius,base_height, faces);
+				var base_mesh = new THREE.Mesh(base_Geometry, material);
+				base_mesh.position.set(0,base_height/2,0);
+				robotArm.add(base_mesh);
+
+				//=========================//
+				//				LOWERARM				 //
+				//=========================//
+
+				var lowerArm_Geometry = new THREE.CylinderGeometry(lowerArm_radius,lowerArm_radius,lowerArm_height, faces);
+				var lowerArm_mesh = new THREE.Mesh(lowerArm_Geometry, material);
+				//lowerArm_mesh.rotateZ((90 * Math.PI)/180);
+				base_mesh.add(lowerArm_mesh);
+
+				scene.add(robotArm);
+			}
+
+			function animate() {
+				requestAnimationFrame( animate );
+				render();
+				line2.geometry.vertices[1].x = measurements.end_x;
+				line2.geometry.vertices[1].z = measurements.end_z;
+				let angles = [measurements.end_x, 0, measurements.end_z, 0, 0, 0];
+				line2.geometry.verticesNeedUpdate = true;
+				try {
+					iK(angles);
+				} catch (e) {
+
+				} finally {
+
+				}
+				// console.log(kin  );
+
+				// console.log(line2.geometry.vertices[1]);
+				controls.update();
+				stats.update();
+			}
+			function render() {
+				renderer.render( scene, camera );
+			}
+
+		</script>
+
+	</body>
+</html>
