@@ -1,5 +1,4 @@
 var ARM = (function (my) {
-  var _private = my._private = my._private || {};
 
   my.base_height 			= 			 5;
   my.base_radius 			= 			 5;
@@ -15,23 +14,14 @@ var ARM = (function (my) {
 
   my.geometry = [
     // X   Y   Z
-    [1,  1,  0], // V0:
-    [0, 10,  0], // V1:
-    [5,  0,  0], // V2:
-    [3,  0,  0], // V3:
-    [0, -3,  0], // V4:
+    [0,  0,  0], // V0:
+    [0, 2,  0], // V1:
+    [10,  10,  0], // V2:
+    [7,  0,  0], // V3:
+    [0, 7,  0], // V4:
   ]
 
-  _seal = my._seal = my._seal || function () {
-    delete my._private;
-    delete my._seal;
-    delete my._unseal;
-  },
-  _unseal = my._unseal = my._unseal || function () {
-    my._private = _private;
-    my._seal = _seal;
-    my._unseal = _unseal;
-  };
+
   // permanent access to _private, _seal, and _unseal
   return my;
 }(ARM || {}));

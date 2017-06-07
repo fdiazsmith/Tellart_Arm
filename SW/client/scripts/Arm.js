@@ -1,3 +1,7 @@
+/* TODO
+  - [ ] create a method to generate vector geometry form Arm Measurements
+*/
+
 var ARM = (function (my) {
 
 
