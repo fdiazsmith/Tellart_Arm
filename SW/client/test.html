@@ -39,38 +39,6 @@
 			console.log("Initialize");
 
 
-
-
-			var params = {
-				uniform: true
-			};
-
-	
-
-			const geometry = [
-				// X   Y   Z
-				[1,  1,  0], // V0:
-				[0, 10,  0], // V1:
-				[5,  0,  0], // V2:
-				[3,  0,  0], // V3:
-				[0, -3,  0], // V4:
-			]
-
-			var kin = new Kinematics(geometry);
-
-			let angles = [0, 5, 0, 0, 0, 1]
-			var frw = kin.forward(...angles);
-			iK(angles);
-
-			function iK(a){
-				var frw = kin.inverse(...a);
-				console.log("print angles",frw);
-			}
-			var line2;
-			var testIK;
-			// var kin;
-
-
 		</script>
 
 	</body>

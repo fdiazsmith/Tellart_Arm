@@ -1,6 +1,8 @@
 var ARM = (function (my) {
 
-  console.log( my.base_height );
+
+  my.kin =  new Kinematics(my.geometry);
+  console.log( my);
   var _private = my._private = my._private || {},
 
   _seal = my._seal = my._seal || function () {

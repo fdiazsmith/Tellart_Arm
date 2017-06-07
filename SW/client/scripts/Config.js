@@ -13,7 +13,14 @@ var ARM = (function (my) {
   my.upperArm_radius		=				 5;
 
 
-
+  my.geometry = [
+    // X   Y   Z
+    [1,  1,  0], // V0:
+    [0, 10,  0], // V1:
+    [5,  0,  0], // V2:
+    [3,  0,  0], // V3:
+    [0, -3,  0], // V4:
+  ]
 
   _seal = my._seal = my._seal || function () {
     delete my._private;
