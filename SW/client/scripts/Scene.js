@@ -47,7 +47,7 @@ var SCENE = (function (my) {
 
     // set ceamera
     camera = new THREE.PerspectiveCamera( 3, window.innerWidth / window.innerHeight, 200, 10000 );
-    camera.position.set( 100, 100, 900 );
+    camera.position.set( 0,0, 500 );
     scene.add( camera );
     scene.add( new THREE.AmbientLight( 0xf0f0f0 ) );
 
@@ -100,6 +100,7 @@ var SCENE = (function (my) {
 
 
     constructArm(ARM.geometry);
+    IK.origin = new THREE.Vector3(0,0,0);
   }
 
   function constructArm(geometry){
@@ -107,6 +108,7 @@ var SCENE = (function (my) {
     var lineMaterial = new THREE.LineBasicMaterial({ color: 0x0000ff });
     var g = [];
     var s = [];
+    //iterates geometry and creates vectors
     for (var i = 1; i < geometry.length; i++) {
       g[i-1] = new THREE.Geometry();
       // g[i-1].vertices.push(new THREE.Vector3(geometry[i-1][0],geometry[i-1][1],geometry[i-1][2]), new THREE.Vector3(geometry[i][0],geometry[i][1],geometry[i][2]));
@@ -118,7 +120,7 @@ var SCENE = (function (my) {
 
 
     }
-
+    // nest the lines inside each other
     for (var i = l.length -1; i > 0 ; i--) {
       l[i-1].add(l[i]);
       l[i-1].add(s[i])
@@ -127,9 +129,6 @@ var SCENE = (function (my) {
     l[0].add(s[0]);
     //add the 'Base' line to the scene
     scene.add(l[0]);
-    console.log(l[0]);
-
-
 
   }
 
@@ -140,50 +139,24 @@ var SCENE = (function (my) {
     render();
 
 
-    let angles = [output.target_x,
-                  output.target_y,
-                  output.target_z,
-                  0, 0, 0];
-    try {
-
-      var newAngles = ARM.kin.inverse(...angles);
-      console.log(newAngles);
-      output.R0 = newAngles[0] ;
-      output.R1 = newAngles[1] ;
-      output.R2 = newAngles[2] ;
-      output.R3 = newAngles[3] ;
-      output.R4 = newAngles[4] ;
-      output.R5 = newAngles[5] ;
-      // console.log(newAngles);
-      newAngles.forEach(function(){
-
-      });
-    } catch (e) {
-
-    }
 
 
-    // line2.geometry.vertices[1].x = output.target_x;
-    // line2.geometry.vertices[1].z = output.target_z;
-    // line2.geometry.vertices[1].y = output.target_y;
-    // line2.geometry.verticesNeedUpdate = true;
+    var robotIK = IK.target(new THREE.Vector3(output.target_x,output.target_y,output.target_z));
+    // console.log(robotIK);
+    new THREE.Vector3(output.target_x,output.target_y,output.target_z)
+    // output.R0 = robotIK.baseAngleToTarget ;
+    output.R1 = robotIK.shoulderAngle ;
+    output.R2 = robotIK.elbowAngle ;
+
+
+
     l[0].rotation.y = output.R0;
-    l[0].children[0].rotation.z = output.R1;
-    l[0].children[0].children[0].rotation.z = output.R2;
-    l[0].children[0].children[0].rotation.x = output.R3;
-    l[0].children[0].children[0].children[0].rotation.z = output.R4;
-    l[0].children[0].children[0].children[0].rotation.x = output.R5;
-    // l[0].children[0].children[0].children[0].children[0].rotation.z = output.R4;
-    // l[0].children[0].children[0].children[0].children[0].rotation.z = output.R4;
+    l[0].rotation.z = output.R1 ;
+    l[0].children[0].rotation.z = output.R2;
+    // l[0].children[0].children[0].rotation.x = output.R3;
+    // l[0].children[0].children[0].children[0].rotation.z = output.R4;
+    // l[0].children[0].children[0].children[0].rotation.x = output.R5;
 
-    // var vector = new THREE.Vector3( 1, 0, 0 );
-    // l[0].children[0].rotation.x = output.R1;
-    // console.log(l[0].children[0].children[0].children[0]);
-    // var axis = new THREE.Vector3( 0, 1, 0 );
-    // var angle = Math.PI / 2;
-    // vector.applyAxisAngle( axis, output.R1 );
-
-    // console.log(line2.geometry.vertices[1]);
     controls.update();
     stats.update();
   }
