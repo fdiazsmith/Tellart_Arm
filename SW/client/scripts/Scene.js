@@ -1,8 +1,12 @@
+/* TODO
+  - [ ] PROPERLY COMMENT THE FUCK OUT OF THIS DOC...following the YUI doc specs
+  - [ ] Add camera controls: ortho, perspective and viewing angle.
+  - [ ]
+*/
+
 var SCENE = (function (my) {
 
-
-  /// above should be deleted. it exist in ARM
-
+  // D A T   G U I   V A R I A B L E S
   var output = {
     target_x : 5.0,
     target_z : 5.0,
@@ -23,17 +27,16 @@ var SCENE = (function (my) {
   f1.add(output, 'target_y').min(-50).max(50).step(0.25).listen();
   f1.open();
   var f2 = gui.addFolder("Angles");
-  f2.add(output, "R0").min(-6.28).max(6.28).step(0.125);//.listen();
-  f2.add(output, "R1").min(-6.28).max(6.28).step(0.125);//.listen();
-    // f2.add(output, "R1").listen();
-  f2.add(output, "R2").listen();
-  f2.add(output, "R3").listen();
-  f2.add(output, "R4").listen();
-  f2.add(output, "R5").listen();
+  f2.add(output, "R0").min(-6.28).max(6.28).step(0.125).listen();
+  f2.add(output, "R1").min(-6.28).max(6.28).step(0.125).listen();
+  f2.add(output, "R2").min(-6.28).max(6.28).step(0.125).listen();
+  f2.add(output, "R3").min(-6.28).max(6.28).step(0.125).listen();
+  f2.add(output, "R4").min(-6.28).max(6.28).step(0.125).listen();
+  f2.add(output, "R5").min(-6.28).max(6.28).step(0.125).listen();
   f2.open();
 
 
-  var control;
+  // var control;
   var l = [];
 
 
@@ -44,7 +47,7 @@ var SCENE = (function (my) {
 
     // set ceamera
     camera = new THREE.PerspectiveCamera( 3, window.innerWidth / window.innerHeight, 200, 10000 );
-    camera.position.set( -300, 500, 300 );
+    camera.position.set( 100, 100, 900 );
     scene.add( camera );
     scene.add( new THREE.AmbientLight( 0xf0f0f0 ) );
 
@@ -136,22 +139,6 @@ var SCENE = (function (my) {
     requestAnimationFrame( my.animate );
     render();
 
-    // line2.geometry.vertices[1].x = output.target_x;
-    // line2.geometry.vertices[1].z = output.target_z;
-    // line2.geometry.vertices[1].y = output.target_y;
-    // line2.geometry.verticesNeedUpdate = true;
-    l[0].rotation.y = output.R0;
-
-    // var vector = new THREE.Vector3( 1, 0, 0 );
-    // l[0].children[0].rotation.x = output.R1;
-    console.log(l[0].children[0]);
-    // var axis = new THREE.Vector3( 0, 1, 0 );
-    // var angle = Math.PI / 2;
-    // vector.applyAxisAngle( axis, output.R1 );
-
-
-    l[0].children[0].rotation.z = output.R1;
-
 
     let angles = [output.target_x,
                   output.target_y,
@@ -160,12 +147,13 @@ var SCENE = (function (my) {
     try {
 
       var newAngles = ARM.kin.inverse(...angles);
-      // output.R0 = THREE.Math.radToDeg(newAngles[0]) ;
-      // output.R1 = THREE.Math.radToDeg(newAngles[1]) ;
-      output.R2 = THREE.Math.radToDeg(newAngles[2]) ;
-      output.R3 = THREE.Math.radToDeg(newAngles[3]) ;
-      output.R4 = THREE.Math.radToDeg(newAngles[4]) ;
-      output.R5 = THREE.Math.radToDeg(newAngles[5]) ;
+      console.log(newAngles);
+      output.R0 = newAngles[0] ;
+      output.R1 = newAngles[1] ;
+      output.R2 = newAngles[2] ;
+      output.R3 = newAngles[3] ;
+      output.R4 = newAngles[4] ;
+      output.R5 = newAngles[5] ;
       // console.log(newAngles);
       newAngles.forEach(function(){
 
@@ -173,6 +161,27 @@ var SCENE = (function (my) {
     } catch (e) {
 
     }
+
+
+    // line2.geometry.vertices[1].x = output.target_x;
+    // line2.geometry.vertices[1].z = output.target_z;
+    // line2.geometry.vertices[1].y = output.target_y;
+    // line2.geometry.verticesNeedUpdate = true;
+    l[0].rotation.y = output.R0;
+    l[0].children[0].rotation.z = output.R1;
+    l[0].children[0].children[0].rotation.z = output.R2;
+    l[0].children[0].children[0].rotation.x = output.R3;
+    l[0].children[0].children[0].children[0].rotation.z = output.R4;
+    l[0].children[0].children[0].children[0].rotation.x = output.R5;
+    // l[0].children[0].children[0].children[0].children[0].rotation.z = output.R4;
+    // l[0].children[0].children[0].children[0].children[0].rotation.z = output.R4;
+
+    // var vector = new THREE.Vector3( 1, 0, 0 );
+    // l[0].children[0].rotation.x = output.R1;
+    // console.log(l[0].children[0].children[0].children[0]);
+    // var axis = new THREE.Vector3( 0, 1, 0 );
+    // var angle = Math.PI / 2;
+    // vector.applyAxisAngle( axis, output.R1 );
 
     // console.log(line2.geometry.vertices[1]);
     controls.update();

@@ -3,8 +3,6 @@
 */
 
 var ARM = (function (my) {
-
-
   my.kin =  new Kinematics(my.geometry);
   console.log( my);
   var _private = my._private = my._private || {},
