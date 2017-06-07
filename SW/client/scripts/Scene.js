@@ -25,7 +25,7 @@ var SCENE = (function (my) {
   f1.add(output, 'target_x').min(-50).max(50).step(0.25).listen();
   f1.add(output, 'target_z').min(-50).max(50).step(0.25).listen();
   f1.add(output, 'target_y').min(-50).max(50).step(0.25).listen();
-  f1.open();
+  // f1.open();
   var f2 = gui.addFolder("Angles");
   f2.add(output, "R0").min(-6.28).max(6.28).step(0.125).listen();
   f2.add(output, "R1").min(-6.28).max(6.28).step(0.125).listen();
@@ -33,7 +33,7 @@ var SCENE = (function (my) {
   f2.add(output, "R3").min(-6.28).max(6.28).step(0.125).listen();
   f2.add(output, "R4").min(-6.28).max(6.28).step(0.125).listen();
   f2.add(output, "R5").min(-6.28).max(6.28).step(0.125).listen();
-  f2.open();
+  // f2.open();
 
 
   // var control;
@@ -127,6 +127,7 @@ var SCENE = (function (my) {
     }
     //the above for loop does not reach zero, so we have to add the last one by hand.
     l[0].add(s[0]);
+    console.log(l[0]);
     //add the 'Base' line to the scene
     scene.add(l[0]);
 
@@ -144,15 +145,15 @@ var SCENE = (function (my) {
     var robotIK = IK.target(new THREE.Vector3(output.target_x,output.target_y,output.target_z));
     // console.log(robotIK);
     new THREE.Vector3(output.target_x,output.target_y,output.target_z)
-    // output.R0 = robotIK.baseAngleToTarget ;
+    output.R0 = robotIK.baseAngleToTarget ;
     output.R1 = robotIK.shoulderAngle ;
     output.R2 = robotIK.elbowAngle ;
 
 
 
-    l[0].rotation.y = output.R0;
-    l[0].rotation.z = output.R1 ;
     l[0].children[0].rotation.z = output.R2;
+    l[0].rotation.z = output.R1 ;
+    l[0].rotation.y = output.R0;
     // l[0].children[0].children[0].rotation.x = output.R3;
     // l[0].children[0].children[0].children[0].rotation.z = output.R4;
     // l[0].children[0].children[0].children[0].rotation.x = output.R5;
