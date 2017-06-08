@@ -1,9 +1,36 @@
 /**
-  B A S I C   T E S T   F O R   R O B O T   A R M 
+  B A S I C   T E S T   F O R   R O B O T   A R M
 **/
 
 // SerialPort
 var SerialPort  = require( "serialport" );
+
+// Socket.io
+var http = require('http');
+var fs = require('fs');
+
+// Loading the index file . html displayed to the client
+var server = http.createServer(function(req, res) {
+    fs.readFile('./client/index.html', 'utf-8', function(error, content) {
+        res.writeHead(200, {"Content-Type": "text/html"});
+        res.end(content);
+    });
+});
+
+// Loading socket.io
+var io = require('socket.io').listen(server);
+
+// When a client connects, we note it in the console
+io.sockets.on('connection', function (socket) {
+    console.log('A client is connected!');
+    socket.emit('message', 'You are connected!');
+});
+
+
+server.listen(8080);
+
+
+
 
 
 // Serial Port stuff
@@ -29,7 +56,7 @@ SerialPort.list(function (err, ports) {
       }
     };
   });
-  
+
   if ( foundPort ) openPort();
   else {
       console.log( "*******************************************************************************************************" );
@@ -37,7 +64,7 @@ SerialPort.list(function (err, ports) {
       console.log( "If you need an Arduino to work, check the console above and replace portName with the correct port." );
       console.log( "*******************************************************************************************************" );
       console.log();
-  } 
+  }
 });
 
 function openPort(){
@@ -72,13 +99,12 @@ function openPort(){
     var C = "G1 z10.0 f3000.0\nG1 x35.0 y113.0 z10.0 f3000.0\nG1 x35.0 y113.0 z0.0 f900.0"
     myPort.write(C+'\n', function(error){
       if (error != null ) console.log(error);
-    }); 
+    });
   }
   function sayHi(){
-    
+
     myPort.write('$$\n', function(error){
       if (error != null ) console.log(error);
     });   // Do something with this data
   }
-} 
-
+}
