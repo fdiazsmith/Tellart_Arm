@@ -11,8 +11,9 @@ var fs = require('fs');
 
 // Loading the index file . html displayed to the client
 var server = http.createServer(function(req, res) {
-    fs.readFile('./client/index.html', 'utf-8', function(error, content) {
-        res.writeHead(200, {"Content-Type": "text/html"});
+    // console.log(req.url);
+    fs.readFile("./client/"+req.url, 'utf-8', function(error, content) {
+        res.writeHead(200);
         res.end(content);
     });
 });
