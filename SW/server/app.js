@@ -1,36 +1,84 @@
-console.log("READY");
+/**
+  B A S I C   T E S T   F O R   R O B O T   A R M 
+**/
 
-var connect = require('connect');
-var serveStatic = require('serve-static');
-connect().use(serveStatic("./client")).listen(8080, function(){
-    console.log('Server running on 8080...');
+// SerialPort
+var SerialPort  = require( "serialport" );
+
+
+// Serial Port stuff
+var portName = [ '/dev/cu.usbmodem1411'];
+var portNumber;
+var myPort;
+var socketClients = {};
+var controllerREady = false;
+
+SerialPort.list(function (err, ports) {
+  var foundPort = false;
+
+  // flag for whether serial is connected
+  console.log( "***** AVAILABLE SERIAL PORTS *****" );
+  // go through each port and
+  ports.forEach(function(port) {
+    console.log(port.comName);
+    for (var i = portName.length - 1; i >= 0; i--) {
+      if ( port.comName === portName[i]){
+        portNumber = i;
+        foundPort = true;
+        console.log("foound PORT!");
+      }
+    };
+  });
+  
+  if ( foundPort ) openPort();
+  else {
+      console.log( "*******************************************************************************************************" );
+      console.log( "Given port name of " + portName[portNumber] + " is not found. Server will continue, but withouth serial connection." );
+      console.log( "If you need an Arduino to work, check the console above and replace portName with the correct port." );
+      console.log( "*******************************************************************************************************" );
+      console.log();
+  } 
 });
 
+function openPort(){
+  console.log(" moving on");
+  // this only creates a port if the named one is found. allows for server to work without arduino attached
 
-//
-//
-// const Kinematics = require('kinematics').default
-//
-// const geometry = [
-//       [1,  1,  0], // V0: 1x 1y
-//       [0, 10,  0], // V1: 10y
-//       [5,  0,  0], // V2: 5x
-//       [3,  0,  0], // V3: 3x
-//       [0, -3,  0], // V4: -3y
-//     ]
-//
-// const RobotKin = new Kinematics(geometry)
-// console.log(RobotKin);
-//
-// let angles = [0, 0, 0, 0, 0, 1]
-// console.log('angles from array\n',angles);
-// const pose = RobotKin.forward(...angles)
-//
-// console.log('angles forward\n',pose);
-//
-// var testA = [
-//   5,5,0, 0, 0,0
-// ]
-// angles = RobotKin.inverse( ...testA )
-//
-// console.log('angles inverse\n',angles);
+  myPort = new SerialPort(portName[portNumber], {
+    // look for return and newline at the end of each data packet:
+    parser: SerialPort.parsers.readline("\r\n"),
+    //parser: SerialPort.parsers.raw,
+    baudrate: 115200 //9600 //31250 //9600
+  });
+
+  myPort.on( 'open', function(){
+    console.log( 'OK: Port ' + portName[portNumber] + ' has opened.' );
+    setTimeout(function(){
+      console.log("about to say hi");
+      // sayHi();
+      moveMotor("X", "100", "1000");
+    }, 6500);
+    // setTimeout(, 800);
+  });
+
+  myPort.on('data', function (data) {
+    console.log( 'Serial Data : ' + data);
+
+    if (data.search("$") === 24) console.log("OK: READY!!!")
+  });
+  function moveMotor(_which, _pos, _speed){
+    var GCODE = "G1 "+ _which+_pos + " " + "F"+_speed;
+    console.log("TESTING: |", GCODE);
+    var C = "G1 z10.0 f3000.0\nG1 x35.0 y113.0 z10.0 f3000.0\nG1 x35.0 y113.0 z0.0 f900.0"
+    myPort.write(C+'\n', function(error){
+      if (error != null ) console.log(error);
+    }); 
+  }
+  function sayHi(){
+    
+    myPort.write('$$\n', function(error){
+      if (error != null ) console.log(error);
+    });   // Do something with this data
+  }
+} 
+

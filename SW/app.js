@@ -5,13 +5,15 @@
 // SerialPort
 var SerialPort  = require( "serialport" );
 
+// Socket.io
+var io = require('socket.io')(app);
 
 // Serial Port stuff
 var portName = [ '/dev/cu.usbmodem1411'];
 var portNumber;
 var myPort;
-var socketClients = {};
 var controllerREady = false;
+
 
 SerialPort.list(function (err, ports) {
   var foundPort = false;
