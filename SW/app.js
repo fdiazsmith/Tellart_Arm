@@ -1,60 +1,84 @@
+/**
+  B A S I C   T E S T   F O R   R O B O T   A R M 
+**/
 
+// SerialPort
+var SerialPort  = require( "serialport" );
 
-// serialport
-var serialport  = require( "serialport" );
-var SerialPort  = serialport.SerialPort; // local instance
 
 // Serial Port stuff
 var portName = [ '/dev/cu.usbmodem1411'];
-var portNameNumber;
+var portNumber;
 var myPort;
 var socketClients = {};
+var controllerREady = false;
 
-serialport.list(function (err, ports) {
+SerialPort.list(function (err, ports) {
+  var foundPort = false;
 
   // flag for whether serial is connected
-  var foundPort = false;
   console.log( "***** AVAILABLE SERIAL PORTS *****" );
   // go through each port and
   ports.forEach(function(port) {
     console.log(port.comName);
     for (var i = portName.length - 1; i >= 0; i--) {
       if ( port.comName === portName[i]){
-        portNameNumber = i;
+        portNumber = i;
         foundPort = true;
+        console.log("foound PORT!");
       }
     };
-
   });
-  console.log();
-
-  // this only creates a port if the named one is found. allows for server to work without arduino attached
-  if ( foundPort === true ){
-    myPort = new SerialPort(portName[portNameNumber], {
-      // look for return and newline at the end of each data packet:
-      parser: serialport.parsers.readline("\r\n"),
-      //parser: serialport.parsers.raw,
-      baudrate: 115200 //9600 //31250 //9600
-    });
-
-    myPort.on( 'open', function(){
-      console.log( 'Port ' + portName[portNameNumber] + ' has opened.' );
-    });
-
-    myPort.on('data', function (data) {
-      console.log( 'Serial Data : ' + data );
-
-     // Do something with this data
-    });
-
-
-
-  }
+  
+  if ( foundPort ) openPort();
   else {
-    console.log( "*******************************************************************************************************" );
-    console.log( "Given port name of " + portName[portNameNumber] + " is not found. Server will continue, but withouth serial connection." );
-    console.log( "If you need an Arduino to work, check the console above and replace portName with the correct port." );
-    console.log( "*******************************************************************************************************" );
-    console.log();
-  }
+      console.log( "*******************************************************************************************************" );
+      console.log( "Given port name of " + portName[portNumber] + " is not found. Server will continue, but withouth serial connection." );
+      console.log( "If you need an Arduino to work, check the console above and replace portName with the correct port." );
+      console.log( "*******************************************************************************************************" );
+      console.log();
+  } 
 });
+
+function openPort(){
+  console.log(" moving on");
+  // this only creates a port if the named one is found. allows for server to work without arduino attached
+
+  myPort = new SerialPort(portName[portNumber], {
+    // look for return and newline at the end of each data packet:
+    parser: SerialPort.parsers.readline("\r\n"),
+    //parser: SerialPort.parsers.raw,
+    baudrate: 115200 //9600 //31250 //9600
+  });
+
+  myPort.on( 'open', function(){
+    console.log( 'OK: Port ' + portName[portNumber] + ' has opened.' );
+    setTimeout(function(){
+      console.log("about to say hi");
+      // sayHi();
+      moveMotor("X", "100", "1000");
+    }, 6500);
+    // setTimeout(, 800);
+  });
+
+  myPort.on('data', function (data) {
+    console.log( 'Serial Data : ' + data);
+
+    if (data.search("$") === 24) console.log("OK: READY!!!")
+  });
+  function moveMotor(_which, _pos, _speed){
+    var GCODE = "G1 "+ _which+_pos + " " + "F"+_speed;
+    console.log("TESTING: |", GCODE);
+    var C = "G1 z10.0 f3000.0\nG1 x35.0 y113.0 z10.0 f3000.0\nG1 x35.0 y113.0 z0.0 f900.0"
+    myPort.write(C+'\n', function(error){
+      if (error != null ) console.log(error);
+    }); 
+  }
+  function sayHi(){
+    
+    myPort.write('$$\n', function(error){
+      if (error != null ) console.log(error);
+    });   // Do something with this data
+  }
+} 
+
