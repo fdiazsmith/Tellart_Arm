@@ -1,5 +1,5 @@
 /* TODO
-  - [ ]
+  - [ ] COMMENT THE FUCK OUT OF IT, WITH REFERENCE TO TRIG PROBLEMS
 */
 
 //requires THREE.js
