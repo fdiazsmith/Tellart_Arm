@@ -2,9 +2,11 @@
   - [ ] COMMENT THE FUCK OUT OF IT, WITH REFERENCE TO TRIG PROBLEMS
 */
 
+
 //requires THREE.js
 var IK = (function (self) {
   self.origin;
+  self._debug = false;
 
   // function getDistance from
   self.target = function(vec3){
@@ -24,7 +26,7 @@ var IK = (function (self) {
       D = Math.atan2(dy,dx),
       F = Math.atan2(vec3.z, dy ),//
       E = D + B + Math.PI + C ;
-
+      if(self._debug){
       console.log("dist", c);
       console.log("B",B);
       console.log('C',C);
@@ -33,6 +35,7 @@ var IK = (function (self) {
       console.log('F', F);
       console.log("DIF FD", D-F);
       console.log("\n\n");
+      }
       var out = {
         baseAngleToTarget : baseAngleToTarget,
         shoulderAngle : ( D  + B  ) + Math.PI/2 * -1,//( D + B ) + Math.PI/2 *-1 ,

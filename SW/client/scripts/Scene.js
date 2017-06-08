@@ -4,10 +4,10 @@
   - [ ]
 */
 
-var SCENE = (function (my) {
+var SCENE = (function (self) {
 
   // D A T   G U I   V A R I A B L E S
-  var output = {
+  self.output = {
     target_x : 5.0,
     target_z : 5.0,
     target_y : 5.0,
@@ -22,17 +22,17 @@ var SCENE = (function (my) {
   var gui = new dat.gui.GUI();
 
   var f1 = gui.addFolder('Target_coordinates');
-  f1.add(output, 'target_x').min(-50).max(50).step(0.25).listen();
-  f1.add(output, 'target_z').min(-50).max(50).step(0.25).listen();
-  f1.add(output, 'target_y').min(-50).max(50).step(0.25).listen();
+  f1.add(self.output, 'target_x').min(-50).max(50).step(0.25).listen();
+  f1.add(self.output, 'target_z').min(-50).max(50).step(0.25).listen();
+  f1.add(self.output, 'target_y').min(-50).max(50).step(0.25).listen();
   // f1.open();
   var f2 = gui.addFolder("Angles");
-  f2.add(output, "R0").min(-6.28).max(6.28).step(0.125).listen();
-  f2.add(output, "R1").min(-6.28).max(6.28).step(0.125).listen();
-  f2.add(output, "R2").min(-6.28).max(6.28).step(0.125).listen();
-  f2.add(output, "R3").min(-6.28).max(6.28).step(0.125).listen();
-  f2.add(output, "R4").min(-6.28).max(6.28).step(0.125).listen();
-  f2.add(output, "R5").min(-6.28).max(6.28).step(0.125).listen();
+  f2.add(self.output, "R0").min(-6.28).max(6.28).step(0.125).listen();
+  f2.add(self.output, "R1").min(-6.28).max(6.28).step(0.125).listen();
+  f2.add(self.output, "R2").min(-6.28).max(6.28).step(0.125).listen();
+  f2.add(self.output, "R3").min(-6.28).max(6.28).step(0.125).listen();
+  f2.add(self.output, "R4").min(-6.28).max(6.28).step(0.125).listen();
+  f2.add(self.output, "R5").min(-6.28).max(6.28).step(0.125).listen();
   // f2.open();
 
 
@@ -91,11 +91,11 @@ var SCENE = (function (my) {
     scene.add(control);
 
     control.addEventListener( 'change', function(){
-        //update output values:
-      output.target_x = control.position.x;
-      output.target_y = control.position.y;
-      output.target_z = control.position.z;
-                        // output.baseAngel = Math.atan2(control.position.z,control.position.x)*(180/Math.PI);
+        //update self.output values:
+      self.output.target_x = control.position.x;
+      self.output.target_y = control.position.y;
+      self.output.target_z = control.position.z;
+                        // self.output.baseAngel = Math.atan2(control.position.z,control.position.x)*(180/Math.PI);
     });
 
 
@@ -135,31 +135,34 @@ var SCENE = (function (my) {
 
 
 
-  my.animate = function(){
-    requestAnimationFrame( my.animate );
+  self.animate = function(_callback){
+    requestAnimationFrame( self.animate );
     render();
 
 
 
 
-    var robotIK = IK.target(new THREE.Vector3(output.target_x,output.target_y,output.target_z));
+    var robotIK = IK.target(new THREE.Vector3(self.output.target_x,self.output.target_y,self.output.target_z));
     // console.log(robotIK);
-    new THREE.Vector3(output.target_x,output.target_y,output.target_z)
-    output.R0 = robotIK.baseAngleToTarget ;
-    output.R1 = robotIK.shoulderAngle ;
-    output.R2 = robotIK.elbowAngle ;
+    // new THREE.Vector3(self.output.target_x,self.output.target_y,self.output.target_z);
+
+    self.output.R0 = robotIK.baseAngleToTarget ;
+    self.output.R1 = robotIK.shoulderAngle ;
+    self.output.R2 = robotIK.elbowAngle ;
 
 
 
-    l[0].children[0].rotation.z = output.R2;
-    l[0].rotation.z = output.R1 ;
-    l[0].rotation.y = output.R0;
-    // l[0].children[0].children[0].rotation.x = output.R3;
-    // l[0].children[0].children[0].children[0].rotation.z = output.R4;
-    // l[0].children[0].children[0].children[0].rotation.x = output.R5;
+    l[0].children[0].rotation.z = self.output.R2;
+    l[0].rotation.z = self.output.R1 ;
+    l[0].rotation.y = self.output.R0;
+    // l[0].children[0].children[0].rotation.x = self.output.R3;
+    // l[0].children[0].children[0].children[0].rotation.z = self.output.R4;
+    // l[0].children[0].children[0].children[0].rotation.x = self.output.R5;
 
     controls.update();
     stats.update();
+
+    if( typeof _callback === 'function')_callback();
   }
 
   function render() {
@@ -224,5 +227,5 @@ var SCENE = (function (my) {
 
   //initialize the THREE.js Environment
   init();
-  return my;
+  return self;
 }(SCENE || {}));
