@@ -38,7 +38,7 @@ var SCENE = (function (self) {
 
   // var control;
   var l = [];
-
+  var lastPosition = new THREE.Vector3(0,0,0);
 
 
     function init() {
@@ -78,7 +78,7 @@ var SCENE = (function (self) {
     //  robotArm = new THREE.Mesh(base_Geometry, material);
 
     //=========================//
-    //     TARGET              //
+    //          TARGET         //
     //=========================//
 
     var control = new THREE.TransformControls( camera, renderer.domElement );
@@ -95,9 +95,18 @@ var SCENE = (function (self) {
       self.output.target_x = control.position.x;
       self.output.target_y = control.position.y;
       self.output.target_z = control.position.z;
+
+
+      var dist = control.position.distanceTo(lastPosition);
+      if(dist > 0.5){
+        lastPosition.set(control.position.x, control.position.y, control.position.z);
+        //console.log(control.position, lastPosition ,dist);
+
+        GCODE_SENDER.move(self.output);
+      }
+      // console.log('SCENE.output', self.output.R1);
                         // self.output.baseAngel = Math.atan2(control.position.z,control.position.x)*(180/Math.PI);
     });
-
 
     constructArm(ARM.geometry);
     IK.origin = new THREE.Vector3(0,0,0);

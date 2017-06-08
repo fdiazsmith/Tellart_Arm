@@ -1,3 +1,4 @@
+
 /**
   B A S I C   T E S T   F O R   R O B O T   A R M
 **/
@@ -8,6 +9,8 @@ var SerialPort  = require( "serialport" );
 // Socket.io
 var http = require('http');
 var fs = require('fs');
+
+var buffer = [];
 
 // Loading the index file . html displayed to the client
 var server = http.createServer(function(req, res) {
@@ -25,8 +28,12 @@ var io = require('socket.io').listen(server);
 io.sockets.on('connection', function (socket) {
     console.log('A client is connected!');
     socket.emit('message', 'You are connected!');
-});
 
+    socket.on('gcode', function (data) {
+      buffer.push(data);
+      myPort.write(data+'\n');
+  });
+});
 
 server.listen(8080);
 
@@ -91,19 +98,24 @@ function openPort(){
 
   myPort.on('data', function (data) {
     console.log( 'Serial Data : ' + data);
-
     if (data.search("$") === 24) console.log("OK: READY!!!")
   });
-  function moveMotor(_which, _pos, _speed){
-    var GCODE = "G1 "+ _which+_pos + " " + "F"+_speed;
-    console.log("TESTING: |", GCODE);
-    var C = "G1 z10.0 f3000.0\nG1 x35.0 y113.0 z10.0 f3000.0\nG1 x35.0 y113.0 z0.0 f900.0"
-    myPort.write(C+'\n', function(error){
-      if (error != null ) console.log(error);
-    });
-  }
-  function sayHi(){
 
+
+  myPort.motion = function(str){
+    myPort.write(C+'\n');
+  }
+
+  // function moveMotor(_which, _pos, _speed){
+  //   var GCODE = "G1 "+ _which+_pos + " " + "F"+_speed;
+  //   console.log("TESTING: |", GCODE);
+  //   var C = "G1 z10.0 f3000.0\nG1 x35.0 y113.0 z10.0 f3000.0\nG1 x35.0 y113.0 z0.0 f900.0"
+  //   myPort.write(C+'\n', function(error){
+  //     if (error != null ) console.log(error);
+  //   });
+  // }
+
+  function sayHi(){
     myPort.write('$$\n', function(error){
       if (error != null ) console.log(error);
     });   // Do something with this data

@@ -26,6 +26,7 @@ var IK = (function (self) {
       D = Math.atan2(dy,dx),
       F = Math.atan2(vec3.z, dy ),//
       E = D + B + Math.PI + C ;
+
       if(self._debug){
       console.log("dist", c);
       console.log("B",B);
