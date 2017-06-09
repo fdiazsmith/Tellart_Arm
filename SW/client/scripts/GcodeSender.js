@@ -4,9 +4,9 @@ var GCODE_SENDER = (function (my) {
   // Construct a motion command with 3 angels
   my.move = function(target){
 
-    var x = my.degToRad(target.R0);
-    var y = my.degToRad(target.R1);
-    var z = my.degToRad(target.R2);
+    var x = my.radToDeg(target.R0);
+    var y = my.radToDeg(target.R1);
+    var z = my.radToDeg(target.R2);
     z = 180 - z;
     var position = "G1 X"+x+" Y"+y+" Z"+z +" F1000";
 
