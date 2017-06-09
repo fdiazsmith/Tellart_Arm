@@ -30,7 +30,7 @@ var sendBuffer = function sendBuffer(){
 // eventEmitter.on('bufferReady', sendBuffer);
 
 var loop = function(){
-   console.log("loop", buffer.length, send);
+  //  console.log("loop", buffer.length, send);
   if(buffer.length > 1 ){
     if(send ){
       buffer.shift();

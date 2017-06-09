@@ -6,7 +6,7 @@ var GCODE_SENDER = (function (my) {
     var x = my.degToRad(target.R0);
     var y = my.degToRad(target.R1);
     var z = my.degToRad(target.R2);
-
+    z = 180 - z;
     var position = "G1 X"+x+" Y"+y+" Z"+z +" F1000";
 
     // var position = "G1 Z"+z+" F1000";
