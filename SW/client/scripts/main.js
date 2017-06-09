@@ -1,5 +1,5 @@
 console.log("READY");
-
-var socket = io.connect('http://localhost:8080');
+var serverURL = window.location.origin;
+var socket = io.connect(serverURL);
 
 SCENE.animate();

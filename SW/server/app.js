@@ -42,7 +42,8 @@ server.listen(8080);
 
 
 // Serial Port stuff
-var portName = [ '/dev/cu.usbmodem1411'];
+var portName = [ '/dev/tty.usbmodem1411',
+                 '/dev/cu.usbmodem1411'];
 var portNumber;
 var myPort;
 var socketClients = {};
@@ -89,9 +90,9 @@ function openPort(){
   myPort.on( 'open', function(){
     console.log( 'OK: Port ' + portName[portNumber] + ' has opened.' );
     setTimeout(function(){
-      console.log("about to say hi");
-      // sayHi();
-      moveMotor("X", "100", "1000");
+      
+      homingCycle();
+      // moveMotor("X", "100", "1000");
     }, 6500);
     // setTimeout(, 800);
   });
@@ -102,9 +103,9 @@ function openPort(){
   });
 
 
-  myPort.motion = function(str){
-    myPort.write(C+'\n');
-  }
+  // myPort.motion = function(str){
+  //   myPort.write(C+'\n');
+  // }
 
   // function moveMotor(_which, _pos, _speed){
   //   var GCODE = "G1 "+ _which+_pos + " " + "F"+_speed;
@@ -115,8 +116,9 @@ function openPort(){
   //   });
   // }
 
-  function sayHi(){
-    myPort.write('$$\n', function(error){
+  function homingCycle(){
+    console.log("Running homing cycle");
+    myPort.write('$H\nG10 P0 L20 X0 Y18 Z-170\n', function(error){
       if (error != null ) console.log(error);
     });   // Do something with this data
   }

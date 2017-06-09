@@ -12,7 +12,10 @@ var GCODE_SENDER = (function (my) {
     var y = my.degToRad(target.R1);
     var z = my.degToRad(target.R2);
 
-    var position = "G1 X"+x+" Y"+y+" Z"+z;
+    // var position = "G1 X"+x+" Y"+y+" Z"+z +" F1000";
+    // var position = "G1 X"+x+" F1000";
+    // var position = "G1 Y"+y+" F1000";
+    var position = "G1 Z"+z+" F1000";
     my.sendGcode(position);
   }
 
