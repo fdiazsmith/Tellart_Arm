@@ -6,8 +6,45 @@
 
 var http = require('http');
 var fs = require('fs');
+var events = require('events');
+// const MotionController = require('./MotionController.js');
+//
+// MotionController.sayHello();
+// var eventEmitter = new events.EventEmitter();
 
-var buffer = ["empty"];
+var sendBuffer = function sendBuffer(){
+  // send gcode command if send is true
+
+  if(send && initMove && buffer.length > 1){
+    buffer.shift();
+    // myPort.write(buffer[0]+'\n');
+    console.log("Buffer Data Sent: "+buffer[0]);
+    console.log("\t\tRemainding Buffer: ", buffer);
+    send = false;
+  }
+  else {
+    initMove = false
+    // console.log("called but sent sothrin ");
+  }
+}
+// eventEmitter.on('bufferReady', sendBuffer);
+
+var loop = function(){
+   console.log("loop", buffer.length, send);
+  if(buffer.length > 1 ){
+    if(send ){
+      buffer.shift();
+      myPort.write(buffer[0]+'\n');
+      console.log("\t\tBuffer Data Sent: "+buffer[0]);
+      console.log("\t\t\tRemainding Buffer: ", buffer);
+      send = false;
+    }
+
+  }
+}
+
+
+var buffer = ["G0 X10", "G0 X10", "G0 X10", "G0 X10"];
 
 // Loading the index file . html displayed to the client
 var server = http.createServer(function(req, res) {
@@ -25,6 +62,7 @@ var io = require('socket.io').listen(server);
 io.sockets.on('connection', function (socket) {
     console.log('A client is connected!');
     socket.emit('message', 'You are connected!');
+    buffer = [null];
 });
 
 server.listen(8080);
@@ -72,6 +110,9 @@ SerialPort.list(function (err, ports) {
 //=========================//
 //       PORT AVAIBLE      //
 //=========================//
+  var send = true;
+  var initMove = false;
+
 
 function openPort(){
 
@@ -100,32 +141,17 @@ function openPort(){
   //=========================//
   //         BUFFER          //
   //=========================//
-  var send = true;
 
-  myPort.on('data', function (data) {
-    if(data=="ok"){
-      console.log("yaya");
-    }
-  });
 
   // when resiving data add it to the buffer
   io.sockets.on('connection', function (socket) {
     socket.on('gcode', function (data) {
       buffer.push(data);
-      //console.log(buffer);
-      // while(buffer.length > 1){
-      //   // send gcode command if send is true
-      //   if(send){
-      //     buffer.shift();
-      //     myPort.write(buffer[0]+'\n');
-      //     console.log("Buffer Data : "+buffer[0]);
-      //     send = false;
-      //   }
-      //   // wait until a "ok" is resives and set send to true
-      //   myPort.on('data', function (data) {
-      //       if(data == "ok") send = true;
-      //   });
-      // }
+      initMove = true;
+      // eventEmitter.emit('bufferReady');
+      // sendBuffer()
+          send = true;
+
     });
   });
 
@@ -138,6 +164,18 @@ function openPort(){
   // Trigger when resiving data from the arduino/grlb
   myPort.on('data', function (data) {
     console.log( 'Serial Data : ' + data);
+      if(data == "ok") {
+
+        send = true;
+        console.log("\tSend = ture", send);
+        // if(initMove){
+          // send = true;
+          // console.log("\tMotion OK", send, initMove);
+          // sendBuffer();
+        // }
+
+      }
+      // eventEmitter.emit('bufferReady');
     // send serial data to the socket.io
     io.sockets.on('connection', function (socket) {
       socket.emit('message', "Serial Data : "+data);
@@ -157,3 +195,7 @@ function openPort(){
     });   // Do something with this data
   }
 }
+// io.setMaxListeners(1000)
+setInterval(function(){
+  setInterval(loop,100);
+},5000)
