@@ -1,10 +1,5 @@
 var GCODE_SENDER = (function (my) {
 
-  my.initialize = function(){
-    var homingCycle   = "$H";
-    var resetPosition = "G10 L0 P0 X0 Y0 Z0";
-  }
-
 
   my.move = function(target){
 
@@ -12,7 +7,9 @@ var GCODE_SENDER = (function (my) {
     var y = my.degToRad(target.R1);
     var z = my.degToRad(target.R2);
 
-    var position = "G1 X"+x+" Y"+y+" Z"+z;
+    // var position = "G1 X"+x+" Y"+y+" Z"+z +" F1000";
+
+    var position = "G1 Z"+z+" F1000";
     my.sendGcode(position);
   }
 

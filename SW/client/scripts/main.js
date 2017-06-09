@@ -1,5 +1,10 @@
 console.log("READY");
+var serverURL = window.location.origin;
+var socket = io.connect(serverURL);
 
-var socket = io.connect('http://localhost:8080');
+// Resive message from server/Arduino responce
+socket.on('message', function (data) {
+    console.log(data);
+});
 
 SCENE.animate();
