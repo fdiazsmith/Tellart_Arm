@@ -102,26 +102,33 @@ function openPort(){
   //=========================//
   var send = true;
 
+  myPort.on('data', function (data) {
+    if(data=="ok"){
+      console.log("yaya");
+    }
+  });
+
   // when resiving data add it to the buffer
   io.sockets.on('connection', function (socket) {
     socket.on('gcode', function (data) {
       buffer.push(data);
       //console.log(buffer);
-      while(buffer.length > 1){
-        // send gcode command if send is true
-        if(send){
-          buffer.shift();
-          myPort.write(buffer[0]+'\n');
-          console.log("Buffer Data : "+buffer[0]);
-          send = false;
-        }
-        // wait until a "ok" is resives and set send to true
-        myPort.on('data', function (data) {
-            if(data == "ok") send = true;
-        });
-      }
+      // while(buffer.length > 1){
+      //   // send gcode command if send is true
+      //   if(send){
+      //     buffer.shift();
+      //     myPort.write(buffer[0]+'\n');
+      //     console.log("Buffer Data : "+buffer[0]);
+      //     send = false;
+      //   }
+      //   // wait until a "ok" is resives and set send to true
+      //   myPort.on('data', function (data) {
+      //       if(data == "ok") send = true;
+      //   });
+      // }
     });
   });
+
 
   //=========================//
   //      SERIAL RESIVER     //
@@ -137,9 +144,7 @@ function openPort(){
     });
   });
 
-  buffer.onPush = function(){
 
-  }
   // if(buffer.length >= 1){
   //   myPort.write(buffer[0]+'\n');
   // }

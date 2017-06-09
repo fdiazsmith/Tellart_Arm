@@ -8,6 +8,8 @@ var SCENE = (function (self) {
 
   // D A T   G U I   V A R I A B L E S
   self.output = {
+    message : "",
+    send : function(){GCODE_SENDER.sendGcode(self.output.message)},
     target_x : 5.0,
     target_z : 5.0,
     target_y : 5.0,
@@ -37,7 +39,10 @@ var SCENE = (function (self) {
   f2.add(self.output, "R1").min(-6.28).max(6.28).step(0.125).listen();
   f2.add(self.output, "R2").min(-6.28).max(6.28).step(0.125).listen();
   // f2.open();
-
+  var f3 = gui.addFolder("Terminal");
+  f3.add(self.output, "message");
+  f3.add(self.output, "send");
+  f3.open();
 
  function init() {
     container = document.getElementById( 'container' );
