@@ -34,7 +34,7 @@ var loop = function(){
   if(buffer.length > 1 ){
     if(send ){
       buffer.shift();
-      myPort.write(buffer[0]+'\n');
+      if(myPort != undefined) myPort.write(buffer[0]+'\n');
       console.log("\t\tBuffer Data Sent: "+buffer[0]);
       console.log("\t\t\tRemainding Buffer: ", buffer);
       send = false;

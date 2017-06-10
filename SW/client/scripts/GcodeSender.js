@@ -1,5 +1,5 @@
 var GCODE_SENDER = (function (my) {
-
+  self.debug = false;
 
   // Construct a motion command with 3 angels
   my.move = function(target){
@@ -24,7 +24,7 @@ var GCODE_SENDER = (function (my) {
 
   // Parse a command to the socket.io
   my.sendGcode = function(str){
-    console.log("Send gcode: "+str);
+    if(self.debug) console.log("Send gcode: "+str);
     socket.emit('gcode', str);
   }
 

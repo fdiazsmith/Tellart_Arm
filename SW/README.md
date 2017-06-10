@@ -6,7 +6,7 @@
 - [ ] Organize Module
 - [ ] Map angles to degrees and positive values: X (base) 0 to center, Y (Shoulder) 0 straight up, Z (Elbow) 0 pointing down.
 - [ ] Solve vec3D rotation angle
-- [ ] Solve the negative number space mapping. 
+- [ ] Solve the negative number space mapping.
 - [ ] Comment the fuck out of it, with reference to articles that lead to solution.
 
 #### SCENE
@@ -20,7 +20,7 @@
 
 #### ARM
 - [ ] Should deal with SCRENE and GUI
-- [ ] Arm should have IK as a dependency.
+- [x] Arm should have IK as a dependency.
 - [x] Config Can go. and move the content to arm.
 
 #### GUI

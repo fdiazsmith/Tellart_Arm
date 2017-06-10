@@ -2,46 +2,58 @@
   - [ ] create a method to generate vector geometry form Arm Measurements
 */
 
-var ARM = (function (my) {
-  // my.kin =  new Kinematics(my.geometry);
-  console.log( my);
+var ARM = (function (self) {
+  // self.kin =  new Kinematics(self.geometry);
+  console.log( self);
+  var _kinematics = IK;
+    self.debug = false;
 
-    my.base_height 			= 			 5;
-    my.base_radius 			= 			 5;
-    my.base_offset 	  	= 		 2.5;
+    self.base_height 			= 			 5;
+    self.base_radius 			= 			 5;
+    self.base_offset 	  	= 		 2.5;
 
-    my.lowerArm_height		= 	 13.75;
-    my.lowerArm_radius		= 			 1.5;
-    my.lowerArm_offset		=			 2.2;
+    self.lowerArm_height		= 	 13.75;
+    self.lowerArm_radius		= 			 1.5;
+    self.lowerArm_offset		=			 2.2;
 
-    my.upperArm_height 	= 		14.9;
-    my.upperArm_radius		=				 5;
+    self.upperArm_height 	= 		14.9;
+    self.upperArm_radius		=				 5;
 
 
-    my.geometry = [
+    self.geometry = [
       // X   Y   Z
-      [0,  0,  0], // V0:
-      [0, 10,  0], // V1:
-      [0,  10,  0], // V2:
-      // [7,  0,  0], // V3:
-      // [0, -4,  0], // V4:
+      [0,  0,  0],
+      [0, 10,  0],
+      [0,  10,  0],
     ]
 
+    _kinematics.origin = { x : self.geometry[0][0], y : self.geometry[0][1], z : self.geometry[0][2] };
 
 
-  var _private = my._private = my._private || {},
 
-  _seal = my._seal = my._seal || function () {
-    delete my._private;
-    delete my._seal;
-    delete my._unseal;
+
+
+    self.move = {
+    inverse : function(_a){
+      return _kinematics.target(_a);
+    }
+  }
+
+
+
+  var _private = self._private = self._private || {},
+
+  _seal = self._seal = self._seal || function () {
+    delete self._private;
+    delete self._seal;
+    delete self._unseal;
   },
-  _unseal = my._unseal = my._unseal || function () {
-    my._private = _private;
-    my._seal = _seal;
-    my._unseal = _unseal;
+  _unseal = self._unseal = self._unseal || function () {
+    self._private = _private;
+    self._seal = _seal;
+    self._unseal = _unseal;
   };
   // permanent access to _private, _seal, and _unseal
 
-  return my;
+  return self;
 }(ARM || {}));

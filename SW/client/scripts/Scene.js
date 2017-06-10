@@ -66,7 +66,12 @@ var SCENE = (function (self) {
     grid.material.opacity = 0.25;
     grid.material.transparent = true;
     scene.add(grid);
+    //=========================//
+    //        WORLD AXIS       //
+    //=========================//
 
+    var axisHelper = new THREE.AxisHelper( 10 );
+    scene.add( axisHelper );
     //=========================//
     //     RENDER SETTINGS     //
     //=========================//
@@ -144,7 +149,7 @@ var SCENE = (function (self) {
     });
 
     constructArm(ARM.geometry);
-    IK.origin = new THREE.Vector3(0,0,0);
+
   }
 
   //=========================//
@@ -178,13 +183,18 @@ var SCENE = (function (self) {
   //=========================//
   //         ANIMATE         //
   //=========================//
+  var originVector = new THREE.Vector3(1,0,0);
 
   self.animate = function(_callback){
     requestAnimationFrame( self.animate );
     render();
-
+    var targerVector = new THREE.Vector3(self.output.target_x,self.output.target_y,self.output.target_z);
     // Calculate the inverted kinimatics
-    var robotIK = IK.target(new THREE.Vector3(self.output.target_x,self.output.target_y,self.output.target_z));
+    var robotIK = ARM.move.inverse(targerVector);
+
+    // console.log(originVector.angleTo(targerVector) );
+
+
 
     // Save the inverted kinimatics into the output object
     self.output.R0 = robotIK.baseAngleToTarget ;
