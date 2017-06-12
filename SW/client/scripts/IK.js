@@ -30,7 +30,9 @@ var IK = (function (self) {
       E = D + B + Math.PI + C ;
 
       var ve = crossProduct(  new THREE.Vector3(0,0,1), vec3 );
-      var test = {x: vec3.x , y: 0 , z: vec3.z }
+      var test = angleBetween({x: vec3.x , y: 0 , z: vec3.z }, vec3 )
+
+      if (vec3.y < 0 ) test = test * -1;
 
       if(self._debug){
       console.log("dist", c);
@@ -44,7 +46,7 @@ var IK = (function (self) {
       }
       var out = {
         baseAngleToTarget : baseAngleToTarget,
-        shoulderAngle : ( angleBetween(test, vec3 ) + B  ) + Math.PI/2 * -1,//( D + B ) + Math.PI/2 *-1 ,
+        shoulderAngle : ( test + B  ) + Math.PI/2 * -1,//( D + B ) + Math.PI/2 *-1 ,
         elbowAngle : C - Math.PI //C - Math.PI//E *-1
       }
 
