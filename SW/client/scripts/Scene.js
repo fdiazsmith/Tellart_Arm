@@ -28,7 +28,7 @@ var SCENE = (function (self) {
         camera.position.set(0,500,0);
         break;
       case 2:
-        camera.position.set(500,0,0);
+        camera.position.set(500,0.1,0);
     }
   }
 
@@ -58,12 +58,14 @@ var SCENE = (function (self) {
     grid.material.opacity = 0.25;
     grid.material.transparent = true;
     scene.add(grid);
+
     //=========================//
     //        WORLD AXIS       //
     //=========================//
 
     var axisHelper = new THREE.AxisHelper( 10 );
     scene.add( axisHelper );
+
     //=========================//
     //     RENDER SETTINGS     //
     //=========================//
@@ -107,6 +109,14 @@ var SCENE = (function (self) {
     control.attach(targetMesh);
     control.setSize(0.05);
     scene.add(control);
+
+    self.reset = function(){
+      targetMesh.position.set(1,0.5,0);
+      control.attach(targetMesh);
+      self.output.target_x = control.position.x;
+      self.output.target_y = control.position.y;
+      self.output.target_z = control.position.z;
+    }
 
     // Project the target position onto the XY Grid
     var circleGeometry = new THREE.CircleGeometry( 0.1, 50);

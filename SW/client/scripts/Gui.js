@@ -8,9 +8,10 @@ var GUI = (function (self) {
   self.control = {
     message : "",
     send :              function(){GCODE_SENDER.sendGcode(self.output.message)},
-    "Send home" :       function(){GCODE_SENDER.home()},
+    "Send home" :       function(){GCODE_SENDER.home(); SCENE.reset();},
     "Return settings" : function(){GCODE_SENDER.settings()},
     "Kill lock" :       function(){GCODE_SENDER.killLock()},
+    "Pause" :           function(){GCODE_SENDER.feedHold()},
     right :             function(){SCENE.camera(0)},
     top :               function(){SCENE.camera(1)},
     front :             function(){SCENE.camera(2)}
@@ -45,6 +46,7 @@ var GUI = (function (self) {
   f4.add(self.control, "Send home");
   f4.add(self.control, "Return settings");
   f4.add(self.control, "Kill lock");
+  f4.add(self.control, "Pause");
   //f3.open();
 
 return self;
