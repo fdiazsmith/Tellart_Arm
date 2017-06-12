@@ -38,6 +38,10 @@
 - [ ] Put everything related to the motion contoller here: buffer, timings, array etc.
 - - Socket relays GCODE to MM and MM handles the Buffer.
 
+## Architecture
+![pic](./_images/arch.png)
+
+
 
 ### dependencies
 * node
