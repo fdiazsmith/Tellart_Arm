@@ -12,23 +12,22 @@ var ARM = (function (self) {
     self.base_radius 			= 			 5;
     self.base_offset 	  	= 		 2.5;
 
-    self.lowerArm_height		= 	 13.75;
-    self.lowerArm_radius		= 			 1.5;
-    self.lowerArm_offset		=			 2.2;
+    self.lowerArm_height		=  13.75;
+    self.lowerArm_radius		= 	 1.5;
+    self.lowerArm_offset		=		 2.2;
 
     self.upperArm_height 	= 		14.9;
-    self.upperArm_radius		=				 5;
+    self.upperArm_radius		=			 5;
 
 
     self.geometry = [
       // X   Y   Z
       [0,  0,  0],
       [0, 10,  0],
-      [0,  10,  0],
+      [0, 10,  0],
     ]
 
     _kinematics.origin = { x : self.geometry[0][0], y : self.geometry[0][1], z : self.geometry[0][2] };
-
 
 
 
