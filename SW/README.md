@@ -10,13 +10,13 @@
 - [ ] Comment the fuck out of it, with reference to articles that lead to solution.
 
 #### SCENE
-- [ ] Get GUI out of it
+- [X] Get GUI out of it
 - [ ]
 
 #### GCODESENDER
-- [ ] GRLB interface commands
-- [ ] A-l-l--O-F--T-H-E-M
-- [ ] GUI should just call methods of GCODESENDER
+- [x] GRLB interface commands
+- [x] A-l-l--O-F--T-H-E-M
+- [x] GUI should just call methods of GCODESENDER
 
 #### ARM
 - [ ] Should deal with SCRENE and GUI
@@ -24,8 +24,8 @@
 - [x] Config Can go. and move the content to arm.
 
 #### GUI
-- [ ] CAMERA folder: with positions like top; left; etc. reset
-- [ ] GRLB interface folder: homing, $X, $C, $G, reset to specific position
+- [x] CAMERA folder: with positions like top; left; etc. reset
+- [x] GRLB interface folder: homing, $X, $C, $G, reset to specific position
 - [ ] LOG option: LOW PRIORITY
 - [ ]
 

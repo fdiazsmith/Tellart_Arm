@@ -8,8 +8,6 @@ var SCENE = (function (self) {
 
   // D A T   G U I   V A R I A B L E S
   self.output = {
-    message : "",
-    send : function(){GCODE_SENDER.sendGcode(self.output.message)},
     target_x : 5.0,
     target_z : 5.0,
     target_y : 5.0,
@@ -20,29 +18,23 @@ var SCENE = (function (self) {
     R4: 0.0,
     R5: 0.0,
   }
+
+  self.camera = function(n){
+    switch(n){
+      case 0:
+        camera.position.set(0,0,500);
+        break;
+      case 1:
+        camera.position.set(0,500,0);
+        break;
+      case 2:
+        camera.position.set(500,0.1,0);
+    }
+  }
+
   // object to store the THREE.line objects
   var l = [];
   var lastPosition = new THREE.Vector3(0,0,0);
-
-  //=========================//
-  //           GUI           //
-  //=========================//
-
-  var gui = new dat.gui.GUI();
-  var f1 = gui.addFolder('Target_coordinates');
-  f1.add(self.output, 'target_x').min(-50).max(50).step(0.25).listen();
-  f1.add(self.output, 'target_z').min(-50).max(50).step(0.25).listen();
-  f1.add(self.output, 'target_y').min(-50).max(50).step(0.25).listen();
-  // f1.open();
-  var f2 = gui.addFolder("Angles");
-  f2.add(self.output, "R0").min(-6.28).max(6.28).step(0.125).listen();
-  f2.add(self.output, "R1").min(-6.28).max(6.28).step(0.125).listen();
-  f2.add(self.output, "R2").min(-6.28).max(6.28).step(0.125).listen();
-  // f2.open();
-  var f3 = gui.addFolder("Terminal");
-  f3.add(self.output, "message");
-  f3.add(self.output, "send");
-  f3.open();
 
  function init() {
     container = document.getElementById( 'container' );
@@ -66,12 +58,14 @@ var SCENE = (function (self) {
     grid.material.opacity = 0.25;
     grid.material.transparent = true;
     scene.add(grid);
+
     //=========================//
     //        WORLD AXIS       //
     //=========================//
 
     var axisHelper = new THREE.AxisHelper( 10 );
     scene.add( axisHelper );
+
     //=========================//
     //     RENDER SETTINGS     //
     //=========================//
@@ -115,6 +109,15 @@ var SCENE = (function (self) {
     control.attach(targetMesh);
     control.setSize(0.05);
     scene.add(control);
+
+    self.reset = function(){
+      targetMesh.position.set(1,0.5,0);
+      control.attach(targetMesh);
+      self.output.target_x = control.position.x;
+      self.output.target_y = control.position.y;
+      self.output.target_z = control.position.z;
+    }
+
     // Project the target position onto the XY Grid
     var circleGeometry = new THREE.CircleGeometry( 0.1, 50);
     var circle = new THREE.Line( circleGeometry, line );
@@ -171,7 +174,7 @@ var SCENE = (function (self) {
     // nest the lines inside each other
     for (var i = l.length -1; i > 0 ; i--) {
       l[i-1].add(l[i]);
-      l[i-1].add(s[i])
+      l[i-1].add(s[i]);
     }
     //the above for loop does not reach zero, so we have to add the last one by hand.
     l[0].add(s[0]);
