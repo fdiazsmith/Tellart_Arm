@@ -174,7 +174,7 @@ var SCENE = (function (self) {
     // nest the lines inside each other
     for (var i = l.length -1; i > 0 ; i--) {
       l[i-1].add(l[i]);
-      l[i-1].add(s[i])
+      l[i-1].add(s[i]);
     }
     //the above for loop does not reach zero, so we have to add the last one by hand.
     l[0].add(s[0]);

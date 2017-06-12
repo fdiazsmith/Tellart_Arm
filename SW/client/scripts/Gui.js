@@ -6,15 +6,16 @@ var GUI = (function (self) {
 
 
   self.control = {
-    message : "",
-    send :              function(){GCODE_SENDER.sendGcode(self.output.message)},
+    Message :           "",
+    Send :              function(){GCODE_SENDER.sendGcode(self.output.message)},
     "Send home" :       function(){GCODE_SENDER.home(); SCENE.reset();},
     "Return settings" : function(){GCODE_SENDER.settings()},
     "Kill lock" :       function(){GCODE_SENDER.killLock()},
     "Pause" :           function(){GCODE_SENDER.feedHold()},
     right :             function(){SCENE.camera(0)},
     top :               function(){SCENE.camera(1)},
-    front :             function(){SCENE.camera(2)}
+    front :             function(){SCENE.camera(2)},
+    Log :               false
   }
 
   var gui = new dat.gui.GUI();
@@ -38,9 +39,10 @@ var GUI = (function (self) {
   // f2.open();
 
   var f3 = gui.addFolder("Terminal");
-  f3.add(self.control, "message");
-  f3.add(self.control, "send");
-  // f3.open();
+  f3.add(self.control, "Message");
+  f3.add(self.control, "Send");
+  f3.add(self.control, "Log");
+  f3.open();
 
   var f4 = gui.addFolder("Machine Controles");
   f4.add(self.control, "Send home");

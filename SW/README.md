@@ -14,8 +14,8 @@
 - [ ]
 
 #### GCODESENDER
-- [ ] GRLB interface commands
-- [ ] A-l-l--O-F--T-H-E-M
+- [x] GRLB interface commands
+- [x] A-l-l--O-F--T-H-E-M
 - [x] GUI should just call methods of GCODESENDER
 
 #### ARM
